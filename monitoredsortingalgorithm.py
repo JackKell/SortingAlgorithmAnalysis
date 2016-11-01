@@ -1,5 +1,6 @@
 from threading import Thread
 from threading import Event
+from time import time
 
 
 class MonitoredSortingAlgorithm(Thread):
@@ -7,13 +8,18 @@ class MonitoredSortingAlgorithm(Thread):
         super(MonitoredSortingAlgorithm, self).__init__()
         self.sortingAlgorithm = sortingAlgorithm
         self.inputList = inputList
+        self.runTime = 0
         self.monitor = Event()
         self.monitor.set()
         self.isShutdown = False
 
     def run(self):
+        start = time()
         while self.isRunning():
             self.runSortingAlgorithm()
+            self.stop()
+        end = time()
+        self.runTime = end - start
         self.isShutdown = True
 
     def stop(self):
